@@ -64,7 +64,7 @@ async function update() {
           throw new Error(`Unable to set torrent port! Current torrent port: ${currentPort}`);
         }
         // write the new port to configured gluetunCfgDir.
-        write_exported_port(config.gluetunIface, currentPort)
+        writeExportedPort(config.gluetunIface, currentPort);
         console.log('torrent port updated');
       }
     } else {
@@ -131,18 +131,18 @@ async function run(trigger: string) {
 
 /**
  * Convert a port number to iptable entries and write to file defined in config.gluetunCfgDir
- * @param iface   Interface name. Eg: tun0
- * @param port    Port forwarded port number
+ * @param {string} iface   Interface name. Eg: tun0
+ * @param {number} port    Port forwarded port number
  */
-function write_exported_port(iface: string, port: number) {
-  let iptables_str = `
+function writeExportedPort(iface: string, port: number) {
+  const iptablesStr = `
     iptables -A INPUT -i ${iface} -p tcp --dport ${port} -j ACCEPT
     iptables -A INPUT -i ${iface} -p udp --dport ${port} -j ACCEPT
   `;
-  fs.writeFileSync(config.gluetunCfgDir, iptables_str, {
+  fs.writeFileSync(config.gluetunCfgDir, iptablesStr, {
     flag: 'w',
   });
-  console.log("New port %d exported to file: %s with iface: %s", port, config.gluetunCfgDir, iface)
+  console.log('New port %d exported to file: %s with iface: %s', port, config.gluetunCfgDir, iface);
 }
 
 // always run on start

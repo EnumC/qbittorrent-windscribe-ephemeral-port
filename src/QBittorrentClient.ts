@@ -23,8 +23,8 @@ export class QBittorrentClient {
       throw new Error('Failed to connect to client');
     }
 
-    let apiversion = await this.client.getApiVersion();
-    let version = await this.client.getAppVersion();
+    const apiversion = await this.client.getApiVersion();
+    const version = await this.client.getAppVersion();
 
     // report status
     return {
@@ -37,9 +37,9 @@ export class QBittorrentClient {
     // make sure we are connected
     await this.updateConnection();
 
-    const {listen_port} = await this.client.getPreferences();
+    const {listen_port: listenPort} = await this.client.getPreferences();
 
-    return listen_port;
+    return listenPort;
   }
 
   async updatePort(port: number): Promise<void> {
@@ -47,7 +47,7 @@ export class QBittorrentClient {
     await this.updateConnection();
 
     // update port
-    const error = await this.client.setPreferences({
+    await this.client.setPreferences({
       listen_port: port,
       random_port: false, // turn of random port as well
     });
