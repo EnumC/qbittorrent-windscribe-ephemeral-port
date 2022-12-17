@@ -1,6 +1,7 @@
 # [qbittorrent-windscribe-ephemeral-port](https://github.com/EnumC/qbittorrent-windscribe-ephemeral-port)
 
-Automatically create ephemeral ports in windscribe and update qbittorrent config to use the new port
+Automatically create ephemeral ports in windscribe and update qbittorrent config to use the new port.
+Also exports the new port as iptables rule for Gluetun.
 
 This repo is for qbittorrent only. For Deluge, check out the original repo this qbittorrent version is forked from: [deluge-windscribe-ephemeral-port](https://github.com/dumbasPL/deluge-windscribe-ephemeral-port)
 
@@ -26,7 +27,7 @@ Configuration is done using environment variables
 | WINDSCRIBE_EXTRA_DELAY | how long to wait (in milliseconds) after the ephemeral port expires before trying to create a new one. | NO | 60000 (1 minute) |
 | CLIENT_RETRY_DELAY | how long to wait (in milliseconds) before retrying after a qbittorrent error. For example a failed login. | NO | 300000 (5 minutes) |
 | CACHE_DIR | A directory where to store cached data like windscribe session cookies | NO | `/cache` in the docker container and `./cache` everywhere else |
-| GLUETUN_DIR | A directory where to write iptables entry for gluetun | NO | `/gluetun.iptables` in the docker container and `./gluetun.iptables` everywhere else |
+| GLUETUN_DIR | A directory where to write iptables entry for gluetun | NO | `/post-rules.txt` in the docker container and `./post-rules.txt` everywhere else |
 | GLUETUN_IFACE | Gluetun vpn interface name | NO | `tun0` |
 
 # Running
@@ -36,7 +37,7 @@ Configuration is done using environment variables
 ```yaml
 version: '3.8'
 services:
-  deluge-windscribe-ephemeral-port:
+  qbittorrent-windscribe-ephemeral-port:
     image: enumc/qbittorrent-windscribe-ephemeral-port:latest
     restart: unless-stopped
     volumes:
@@ -44,7 +45,7 @@ services:
     environment:
       - WINDSCRIBE_USERNAME=<your windscribe username>
       - WINDSCRIBE_PASSWORD=<your windscribe password>
-      - CLIENT_URL=<url of your Deluge Web UI>
+      - CLIENT_URL=<url of your qbittorrent Web UI>
       - CLIENT_USERNAME=<username for the qbittorrent Web UI>
       - CLIENT_PASSWORD=<password for the qbittorrent Web UI>
 
@@ -54,8 +55,13 @@ services:
       # - WINDSCRIBE_EXTRA_DELAY=60000
       # - CRON_SCHEDULE=
       # - CACHE_DIR=/cache
+      # - GLUETUN_DIR=/post-rules.txt
+      # - GLUETUN_IFACE=tun0
+
 volumes:
-  windscribe-cache:
+  - windscribe-cache:
+  # optional
+  # - ./post-rules.txt:/post-rules.txt
 ```
 
 ## Using nodejs
