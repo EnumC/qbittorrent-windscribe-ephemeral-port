@@ -42,6 +42,8 @@ services:
     restart: unless-stopped
     volumes:
       - windscribe-cache:/cache
+      # optional
+      # - ./post-rules.txt:/post-rules.txt
     environment:
       - WINDSCRIBE_USERNAME=<your windscribe username>
       - WINDSCRIBE_PASSWORD=<your windscribe password>
@@ -59,9 +61,7 @@ services:
       # - GLUETUN_IFACE=tun0
 
 volumes:
-  - windscribe-cache:
-  # optional
-  # - ./post-rules.txt:/post-rules.txt
+  windscribe-cache:
 ```
 
 ## Using nodejs
