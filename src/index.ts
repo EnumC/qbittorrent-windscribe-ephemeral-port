@@ -2,7 +2,7 @@ import 'dotenv/config';
 import path from 'path';
 import {KeyvFile} from 'keyv-file';
 import {getConfig} from './config.js';
-import {DelugeClient} from './DelugeClient.js';
+import {QBittorrentClient} from './QBittorrentClient.js';
 import {WindscribeClient, WindscribePort} from './WindscribeClient.js';
 import {schedule} from 'node-cron';
 
@@ -17,8 +17,8 @@ const cache = !config.cacheDir ? undefined : new KeyvFile({
 // inti windscribe client
 const windscribe = new WindscribeClient(config.windscribeUsername, config.windscribePassword, cache);
 
-// init deluge client
-const deluge = new DelugeClient(config.delugeUrl, config.delugePassword, config.delugeHostId);
+// init torrent client
+const client = new QBittorrentClient(config.clientUrl, config.clientUsername, config.clientPassword);
 
 // init schedule if configured
 const scheduledTask = !config.cronSchedule ? null :
@@ -47,32 +47,32 @@ async function update() {
   }
 
   try {
-    let currentPort = await deluge.getPort();
+    let currentPort = await client.getPort();
     if (portInfo) {
       if (currentPort == portInfo.port) {
         // no need to update
-        console.log(`Current deluge port (${currentPort}) already matches windscribe port`);
+        console.log(`Current torrent port (${currentPort}) already matches windscribe port`);
       } else {
         // update port to a new one
-        console.log(`Current deluge port (${currentPort}) does not match windscribe port (${portInfo.port})`);
-        await deluge.updatePort(portInfo.port);
+        console.log(`Current torrent port (${currentPort}) does not match windscribe port (${portInfo.port})`);
+        await client.updatePort(portInfo.port);
 
         // double check
-        currentPort = await deluge.getPort();
+        currentPort = await client.getPort();
         if (currentPort != portInfo.port) {
-          throw new Error(`Unable to set deluge port! Current deluge port: ${currentPort}`);
+          throw new Error(`Unable to set torrent port! Current torrent port: ${currentPort}`);
         }
-        console.log('Deluge port updated');
+        console.log('torrent port updated');
       }
     } else {
-      console.log(`Windscribe port is unknown, current deluge port is ${currentPort}`);
+      console.log(`Windscribe port is unknown, current torrent port is ${currentPort}`);
     }
   } catch (error) {
-    console.error('Deluge update failed', error);
+    console.error('torrent update failed', error);
 
     // if failed, retry after some delay
-    const delugeRetryDelay = config.delugeRetryDelay || (5 * 60 * 1000);
-    nextRetry = new Date(Date.now() + delugeRetryDelay);
+    const clientRetryDelay = config.clientRetryDelay || (5 * 60 * 1000);
+    nextRetry = new Date(Date.now() + clientRetryDelay);
   }
 
   return {

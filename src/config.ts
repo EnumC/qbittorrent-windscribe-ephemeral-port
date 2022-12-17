@@ -14,23 +14,23 @@ interface ConfigTemplateOptionalEntry<T extends string | number> extends ConfigT
 }
 
 const configTemplate = {
-  delugeUrl: {
-    envVariableName: 'DELUGE_URL',
+  clientUrl: {
+    envVariableName: 'CLIENT_URL',
     required: true,
     type: String,
   } as ConfigTemplateRequiredEntry<string>,
-  delugePassword: {
-    envVariableName: 'DELUGE_PASSWORD',
+  clientUsername: {
+    envVariableName: 'CLIENT_USERNAME',
     required: true,
     type: String,
   } as ConfigTemplateRequiredEntry<string>,
-  delugeHostId: {
-    envVariableName: 'DELUGE_HOST_ID',
-    required: false,
+  clientPassword: {
+    envVariableName: 'CLIENT_PASSWORD',
+    required: true,
     type: String,
-  } as ConfigTemplateOptionalEntry<string>,
-  delugeRetryDelay: {
-    envVariableName: 'DELUGE_RETRY_DELAY',
+  } as ConfigTemplateRequiredEntry<string>,
+  clientRetryDelay: {
+    envVariableName: 'CLIENT_RETRY_DELAY',
     required: false,
     default: `${5 * 60 * 1000}`, // 5 minutes
     type: Number,

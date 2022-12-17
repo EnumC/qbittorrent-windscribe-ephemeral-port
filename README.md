@@ -1,12 +1,14 @@
-# [deluge-windscribe-ephemeral-port](https://github.com/dumbasPL/deluge-windscribe-ephemeral-port)
+# [qbittorrent-windscribe-ephemeral-port](https://github.com/EnumC/qbittorrent-windscribe-ephemeral-port)
 
-Automatically create ephemeral ports in windscribe and update deluge config to use the new port
+Automatically create ephemeral ports in windscribe and update qbittorrent config to use the new port
+
+This repo is for qbittorrent only. For Deluge, check out the original repo this qbittorrent version is forked from: [deluge-windscribe-ephemeral-port](https://github.com/dumbasPL/deluge-windscribe-ephemeral-port)
+
 
 ## Important information
 
-This project was designed to work along side containers like [kabe0/deluge-windscribe](https://github.com/Kabe0/deluge-windscribe) in mind.  
-It will not help you configure windscribe to use a vpn!  
-It will only update the port that deluge listens on to the same port that's configured on windscribe website.
+This project was designed to work along side containers like [linuxserver/qbittorrent](https://docs.linuxserver.io/images/docker-qbittorrent) in mind.  
+It will not help you route qbittorrent traffic through a VPN! For that, you can use [qdm12/gluetun](https://github.com/qdm12/gluetun). What it will do is to update the listening port of qbittorrent to the allocated Windscribe port.
 
 # Configuration
 
@@ -16,13 +18,13 @@ Configuration is done using environment variables
 | :-: | :-: | :-: | :-: |
 | WINDSCRIBE_USERNAME | username you use to login at windscribe.com/login | YES |  |
 | WINDSCRIBE_PASSWORD | password you use to login at windscribe.com/login | YES |  |
-| DELUGE_URL | The base URL for the deluge web UI | YES |  |
-| DELUGE_PASSWORD | The password for the deluge web UI | YES |  |
+| CLIENT_URL | The URL for the qbittorrent web UI (eg: http://localhost:8080) | YES |  |
+| CLIENT_USERNAME | The username for the qbittorrent web UI | YES |  |
+| CLIENT_PASSWORD | The password for the qbittorrent web UI | YES |  |
 | CRON_SCHEDULE | An extra cron schedule used to periodically validate and update the port if needed. Disabled if left empty | NO |  |
-| DELUGE_HOST_ID | The internal host id to connect to in the deluge web UI. It will be printed in stdout after the first successful connection to deluge | Only if you have more then one connection configured in connection manager | If you have multiple configured in deluge web ui the app will print them out and crash. If you have only one that one will be used and you don't need to specify it explicitly |
 | WINDSCRIBE_RETRY_DELAY | how long to wait (in milliseconds) before retrying after a windscribe error. For example a failed login. | NO | 3600000 (1 hour) |
 | WINDSCRIBE_EXTRA_DELAY | how long to wait (in milliseconds) after the ephemeral port expires before trying to create a new one. | NO | 60000 (1 minute) |
-| DELUGE_RETRY_DELAY | how long to wait (in milliseconds) before retrying after a deluge error. For example a failed login. | NO | 300000 (5 minutes) |
+| CLIENT_RETRY_DELAY | how long to wait (in milliseconds) before retrying after a qbittorrent error. For example a failed login. | NO | 300000 (5 minutes) |
 | CACHE_DIR | A directory where to store cached data like windscribe session cookies | NO | `/cache` in the docker container and `./cache` everywhere else |
 
 # Running
@@ -33,19 +35,19 @@ Configuration is done using environment variables
 version: '3.8'
 services:
   deluge-windscribe-ephemeral-port:
-    image: dumbaspl/deluge-windscribe-ephemeral-port:2
+    image: enumc/qbittorrent-windscribe-ephemeral-port:latest
     restart: unless-stopped
     volumes:
       - windscribe-cache:/cache
     environment:
       - WINDSCRIBE_USERNAME=<your windscribe username>
       - WINDSCRIBE_PASSWORD=<your windscribe password>
-      - DELUGE_URL=<url of your Deluge Web UI>
-      - DELUGE_PASSWORD=<password for the Deluge Web UI>
+      - CLIENT_URL=<url of your Deluge Web UI>
+      - CLIENT_USERNAME=<username for the qbittorrent Web UI>
+      - CLIENT_PASSWORD=<password for the qbittorrent Web UI>
 
       # optional
-      # - DELUGE_HOST_ID=
-      # - DELUGE_RETRY_DELAY=300000
+      # - CLIENT_RETRY_DELAY=300000
       # - WINDSCRIBE_RETRY_DELAY=3600000
       # - WINDSCRIBE_EXTRA_DELAY=60000
       # - CRON_SCHEDULE=
@@ -65,12 +67,12 @@ volumes:
 ```shell
 WINDSCRIBE_USERNAME=<your windscribe username>
 WINDSCRIBE_PASSWORD=<your windscribe password>
-DELUGE_URL=<url of your Deluge Web UI>
-DELUGE_PASSWORD=<password for the Deluge Web UI>
+CLIENT_URL=<url of your qbittorrent Web UI>
+CLIENT_USERNAME=<username of your qbittorrent Web UI>
+CLIENT_PASSWORD=<password for the qbittorrent Web UI>
 
 # optional
-# DELUGE_HOST_ID=
-# DELUGE_RETRY_DELAY=300000
+# CLIENT_HOST_ID=
 # WINDSCRIBE_RETRY_DELAY=3600000
 # WINDSCRIBE_EXTRA_DELAY=60000
 # CRON_SCHEDULE=
