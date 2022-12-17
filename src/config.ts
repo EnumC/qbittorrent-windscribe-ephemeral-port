@@ -68,6 +68,18 @@ const configTemplate = {
     default: './cache',
     type: String,
   } as ConfigTemplateOptionalEntry<string>,
+  gluetunIface: {
+    envVariableName: 'GLUETUN_IFACE',
+    required: false,
+    default: 'tun0',
+    type: String,
+  } as ConfigTemplateOptionalEntry<string>,
+  gluetunCfgDir: {
+    envVariableName: 'GLUETUN_DIR',
+    required: false,
+    default: './gluetun.iptables',
+    type: String,
+  } as ConfigTemplateOptionalEntry<string>,
 };
 
 type entryType =

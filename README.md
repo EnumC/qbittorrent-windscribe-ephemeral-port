@@ -26,6 +26,8 @@ Configuration is done using environment variables
 | WINDSCRIBE_EXTRA_DELAY | how long to wait (in milliseconds) after the ephemeral port expires before trying to create a new one. | NO | 60000 (1 minute) |
 | CLIENT_RETRY_DELAY | how long to wait (in milliseconds) before retrying after a qbittorrent error. For example a failed login. | NO | 300000 (5 minutes) |
 | CACHE_DIR | A directory where to store cached data like windscribe session cookies | NO | `/cache` in the docker container and `./cache` everywhere else |
+| GLUETUN_DIR | A directory where to write iptables entry for gluetun | NO | `/gluetun.iptables` in the docker container and `./gluetun.iptables` everywhere else |
+| GLUETUN_IFACE | Gluetun vpn interface name | NO | `tun0` |
 
 # Running
 
