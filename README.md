@@ -43,7 +43,7 @@ services:
     volumes:
       - windscribe-cache:/cache
       # optional
-      # - ./post-rules.txt:/post-rules.txt
+      # - ./post-rules.txt:/app/post-rules.txt
     environment:
       - WINDSCRIBE_USERNAME=<your windscribe username>
       - WINDSCRIBE_PASSWORD=<your windscribe password>

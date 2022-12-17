@@ -135,10 +135,8 @@ async function run(trigger: string) {
  * @param {number} port    Port forwarded port number
  */
 function writeExportedPort(iface: string, port: number) {
-  const iptablesStr = `
-    iptables -A INPUT -i ${iface} -p tcp --dport ${port} -j ACCEPT
-    iptables -A INPUT -i ${iface} -p udp --dport ${port} -j ACCEPT
-  `;
+  const iptablesStr = `iptables -A INPUT -i ${iface} -p tcp --dport ${port} -j ACCEPT
+iptables -A INPUT -i ${iface} -p udp --dport ${port} -j ACCEPT`;
   fs.writeFileSync(config.gluetunCfgDir, iptablesStr, {
     flag: 'w',
   });
