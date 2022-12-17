@@ -43,7 +43,7 @@ services:
     volumes:
       - windscribe-cache:/cache
       # optional
-      # - ./post-rules.txt:/app/post-rules.txt
+      # - ./ips:/app/ips
     environment:
       - WINDSCRIBE_USERNAME=<your windscribe username>
       - WINDSCRIBE_PASSWORD=<your windscribe password>
@@ -57,7 +57,7 @@ services:
       # - WINDSCRIBE_EXTRA_DELAY=60000
       # - CRON_SCHEDULE=
       # - CACHE_DIR=/cache
-      # - GLUETUN_DIR=/post-rules.txt
+      # - GLUETUN_DIR=/app/ips/post-rules.txt
       # - GLUETUN_IFACE=tun0
 
 volumes:

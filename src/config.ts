@@ -77,7 +77,7 @@ const configTemplate = {
   gluetunCfgDir: {
     envVariableName: 'GLUETUN_DIR',
     required: false,
-    default: './post-rules.txt',
+    default: '/app/ips/post-rules.txt',
     type: String,
   } as ConfigTemplateOptionalEntry<string>,
 };
